@@ -69,7 +69,7 @@ class OllamaVision:
         # Interact with Ollama
         try:
             response = ollama.chat(
-                model='llava',
+                model='llava:13b',
                 messages=[
                     {
                         'role': 'user',

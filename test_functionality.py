@@ -38,10 +38,22 @@ def test_ollama_connection():
         
         # List available models
         models = ollama.list()
-        print(f"   📋 Available models: {[m['name'] for m in models.get('models', [])]}")
+        model_names = []
+        if 'models' in models:
+            for m in models['models']:
+                if hasattr(m, 'name'):
+                    model_names.append(m.name)
+                elif isinstance(m, dict) and 'name' in m:
+                    model_names.append(m['name'])
+                elif hasattr(m, 'model'):
+                    model_names.append(m.model)
+                else:
+                    model_names.append(str(m))
+        
+        print(f"   📋 Available models: {model_names}")
         
         # Check if llava is available
-        has_llava = any('llava' in m['name'].lower() for m in models.get('models', []))
+        has_llava = any('llava' in str(name).lower() for name in model_names)
         if has_llava:
             print("   ✅ LLaVA model found")
             return True
